@@ -1,4 +1,6 @@
-const path = require('path');
+const webpack        = require('webpack');
+const path           = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 // const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -11,8 +13,8 @@ module.exports = {
     libraryTarget: 'umd'
   },
   externals: [
-    'graphql',
-    // 'graphql-tools'
+    // 'graphql',
+    // 'graphql-tools',
   ],
   module: {
     rules: [{
@@ -24,7 +26,21 @@ module.exports = {
     }]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     // new LodashModuleReplacementPlugin,
+    new UglifyJSPlugin({
+      beautify: false,
+       mangle: {
+         screw_ie8: true,
+         keep_fnames: true
+       },
+       compress: {
+         screw_ie8: true
+       },
+       comments: false
+    }),
     new BundleAnalyzerPlugin()
   ]
 };

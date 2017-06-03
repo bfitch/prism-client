@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["chrome 58"]
+      },
+      "modules": false
+      }]
+    ],
+    "plugins": [
+      "lodash",
+      "transform-class-properties",
+      "transform-object-rest-spread"
+    ]
+  }
