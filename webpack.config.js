@@ -6,12 +6,12 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'prism-client.js',
-    library: 'prismClient',
+    filename: 'index.js',
+    library: 'PrismClient',
     libraryTarget: 'umd'
   },
   externals: [
-    'graphql',
+    // 'graphql',
     // 'graphql-tools'
   ],
   module: {
@@ -25,6 +25,6 @@ module.exports = {
   },
   plugins: [
     // new LodashModuleReplacementPlugin,
-    new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin()
   ]
 };

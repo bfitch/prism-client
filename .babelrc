@@ -8,8 +8,10 @@
       }]
     ],
     "plugins": [
-      "lodash",
       "transform-class-properties",
       "transform-object-rest-spread"
+    ],
+    "presets": [
+      "react"
     ]
   }

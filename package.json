@@ -2,7 +2,7 @@
   "name": "prism-client",
   "version": "0.1.0",
   "description": "A GraphQL client for REST APIs.",
-  "main": "dist/bundle.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "build-prod": "webpack --config webpack.production.config.js",
@@ -33,6 +33,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.1",
+    "babel-preset-react": "^6.24.1",
     "lodash-webpack-plugin": "^0.11.4",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
@@ -43,5 +44,8 @@
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.8.2"
+  },
+  "peerDependencies": {
+    "react": "^15.5.4"
   }
 }

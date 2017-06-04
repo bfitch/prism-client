@@ -1,5 +1,5 @@
 import { graphql } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools/schemaGenerator';
+import { makeExecutableSchema } from 'graphql-tools';
 const { assign, entries } = Object;
 
 export class Prism {
