@@ -4,18 +4,13 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 import UrlBuilderFactory from './url-builder';
 import Normalizer from './normalize';
-import index from './actions/index';
-import show from './actions/show';
-import create from './actions/create';
-import update from './actions/update';
-import deleteAction from './actions/delete';
+import { indexAction, show, create, update, deleteAction } from './actions';
 
 export default function Resolver({ store, loader, http, host }) {
   return class Resolver {
     constructor(options = {}) {
       this.entityName = options.entityName;
       this.forceFetch = false;
-
       this.actionContext = {
         UrlBuilder: UrlBuilderFactory(options.host || host, options.url),
         resetForceFetch: value => this.forceFetch = value,
@@ -27,9 +22,9 @@ export default function Resolver({ store, loader, http, host }) {
     }
 
     index(opts = {}) {
-      return index(_extends({}, this.actionContext, {
-        forceFetchResource: this.forceFetch,
+      return indexAction(_extends({}, this.actionContext, {
         normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
+        forceFetchResource: this.forceFetch,
         includeResponseHeaders: opts.includeResponseHeaders || false,
         storeQuery: opts.storeQuery || (args => obj => true)
       }), opts);
@@ -40,8 +35,8 @@ export default function Resolver({ store, loader, http, host }) {
           opts = _objectWithoutProperties(_ref, ['ids']);
 
       const resourceContext = _extends({}, this.actionContext, {
-        forceFetchResource: this.forceFetch,
         normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
+        forceFetchResource: this.forceFetch,
         includeResponseHeaders: opts.includeResponseHeaders || false
       });
 

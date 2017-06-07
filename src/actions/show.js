@@ -1,4 +1,4 @@
-export default function show({
+export function show({
   entityName,
   UrlBuilder,
   store,

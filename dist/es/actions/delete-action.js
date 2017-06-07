@@ -1,4 +1,6 @@
-export default function deleteAction({
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+export function deleteAction({
   entityName,
   UrlBuilder,
   http,
@@ -8,11 +10,14 @@ export default function deleteAction({
   normalize,
   resetForceFetch,
   update
-}, { id = 'id', ...opts }) {
+}, _ref) {
+  let { id = 'id' } = _ref,
+      opts = _objectWithoutProperties(_ref, ['id']);
 
   return (resolvers, args, context, _) => {
     const url = new UrlBuilder(resolvers, args, opts.url, id);
-    const { options: { forceFetch = false, clearCache = false } = {}, ...variables } = args;
+    const { options: { forceFetch = false, clearCache = false } = {} } = args,
+          variables = _objectWithoutProperties(args, ['options']);
 
     if (clearCache) store.clearCache();
 
@@ -35,5 +40,6 @@ export default function deleteAction({
       update(store.cache, args);
       return entities[entityName][result] || {};
     });
-  }
+  };
 }
+//# sourceMappingURL=delete-action.js.map

@@ -1,4 +1,4 @@
-export default function create({
+export function create({
   entityName,
   UrlBuilder,
   http,

@@ -1,4 +1,4 @@
-export function update({
+export function deleteAction({
   entityName,
   UrlBuilder,
   http,
@@ -8,7 +8,7 @@ export function update({
   normalize,
   resetForceFetch,
   update
-}, { id = 'id', method = 'put', ...opts }) {
+}, { id = 'id', ...opts }) {
 
   return (resolvers, args, context, _) => {
     const url = new UrlBuilder(resolvers, args, opts.url, id);
@@ -17,7 +17,7 @@ export function update({
     if (clearCache) store.clearCache();
 
     const request = http({
-      method,
+      method: 'delete',
       url: url.href,
       params: url.params,
       headers: url.headers,
@@ -26,15 +26,14 @@ export function update({
 
     return request.then(res => {
       const { entities, result } = normalize(res, resolvers, variables);
-      store.set(entities);
+
+      store.delete(entityName, url.id);
 
       loader.clearUrls();
       resetForceFetch(forceFetch);
 
-      const entity = entities[entityName][result];
-      update(store.cache, entity);
-
-      return entity;
+      update(store.cache, args);
+      return entities[entityName][result] || {};
     });
   }
 }
