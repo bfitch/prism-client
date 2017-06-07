@@ -34,3 +34,4 @@ export default class Store {
     }
   }
 }
+//# sourceMappingURL=store.js.map

@@ -1,18 +1,18 @@
 const path = require('path');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    library: 'PrismClient',
+    library: 'Prism',
     libraryTarget: 'umd'
   },
   externals: [
-    // 'graphql',
-    // 'graphql-tools'
+    'react',
+    'graphql'
   ],
   module: {
     rules: [{

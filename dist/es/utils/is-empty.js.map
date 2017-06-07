@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/utils/is-empty.js"],"names":["isEmpty","obj","Object","keys","length"],"mappings":"AAAA,eAAe,SAASA,OAAT,CAAiBC,GAAjB,EAAsB;AACnC,SAAOC,OAAOC,IAAP,CAAYF,GAAZ,EAAiBG,MAAjB,KAA4B,CAAnC;AACD","file":"is-empty.js","sourcesContent":["export default function isEmpty(obj) {\n  return Object.keys(obj).length === 0;\n}\n"]}

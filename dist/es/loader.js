@@ -29,14 +29,13 @@ export default class Loader {
 function fetchEntity(http) {
   // dataloader's caching function: URL => HTTP response.
   // stores any recieved URL/responses in the dataloader cache.
-  return (urls) => {
-    return Promise.all(
-      urls.map(url => http(JSON.parse(url)))
-    );
-  }
+  return urls => {
+    return Promise.all(urls.map(url => http(JSON.parse(url))));
+  };
 }
 
 function stringify(urlObject) {
   const { href, params, headers } = urlObject;
   return JSON.stringify({ url: href, params, headers });
 }
+//# sourceMappingURL=loader.js.map

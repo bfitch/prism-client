@@ -1,20 +1,20 @@
 const webpack        = require('webpack');
 const path           = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-// const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'prism-client.js',
-    library: 'prismClient',
+    filename: 'index.js',
+    library: 'Prism',
     libraryTarget: 'umd'
   },
   externals: [
-    // 'graphql',
-    // 'graphql-tools',
+    'react',
+    'graphql',
   ],
   module: {
     rules: [{
