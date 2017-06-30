@@ -11,14 +11,14 @@ export function show({
   includeResponseHeaders
 }, obj, args, opts) {
 
-  const id = opts.nestedId ? undefined : opts.id || 'id';
-  const url = new UrlBuilder(obj, args, opts.url, id, opts.nestedId);
+  const url = new UrlBuilder(obj, args, opts);
+
   const { options: { forceFetch = false, clearCache = false } = {} } = args,
-        variables = _objectWithoutProperties(args, ['options']);
+        variables = _objectWithoutProperties(args, ["options"]);
   const forceFetching = forceFetch || forceFetchResource;
 
   if (!forceFetching) {
-    const entity = store.get(entityName, opts.nestedId || obj[id] || variables[id]);
+    const entity = store.get(entityName, url.id);
 
     if (entity) {
       if (includeResponseHeaders) {
@@ -32,7 +32,8 @@ export function show({
   if (clearCache) store.clearCache();
 
   return loader.load(url).then(res => {
-    const { entities, result } = normalize(res, obj, variables);
+    const { entities, result } = normalize(res, { obj, args: variables });
+
     store.set(entities);
 
     resetForceFetch(forceFetch);

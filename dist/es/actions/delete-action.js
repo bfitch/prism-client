@@ -10,12 +10,10 @@ export function deleteAction({
   normalize,
   resetForceFetch,
   update
-}, _ref) {
-  let { id = 'id' } = _ref,
-      opts = _objectWithoutProperties(_ref, ['id']);
+}, opts) {
 
   return (resolvers, args, context, _) => {
-    const url = new UrlBuilder(resolvers, args, opts.url, id);
+    const url = new UrlBuilder(resolvers, args, opts);
     const { options: { forceFetch = false, clearCache = false } = {} } = args,
           variables = _objectWithoutProperties(args, ['options']);
 
@@ -30,7 +28,7 @@ export function deleteAction({
     });
 
     return request.then(res => {
-      const { entities, result } = normalize(res, resolvers, variables);
+      const { entities, result } = normalize(res, { obj: resolvers, args: variables });
 
       store.delete(entityName, url.id);
 

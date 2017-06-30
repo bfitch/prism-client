@@ -1,30 +1,22 @@
 import { camelizeCollection, camelizeKeys } from './utils/camelize';
 import { normalize, schema } from 'normalizr';
+const { isArray } = Array;
 
-export default function Normalizer(_parse, __normalize, entityName) {
-  const parse       = _parse      || ((res) => res.data);
-  const normalizeFn = __normalize || defaultNormalizer(entityName);
+export default function Normalizer(entityName, opts) {
+  const normalizeFn = opts.normalize || defaultNormalize(entityName);
+  const parse       = opts.parse     || ((res) => res.data);
+  const store       = opts.store.cache;
 
-  return (res, obj, args) => {
+  return function(res, { obj, args }) {
     const data = parse(res);
-    return normalize(camelizer(data), normalizeFn(obj, args, data));
+    return normalize(camelizer(data), normalizeFn(data, { obj, args, store }));
   }
 }
 
 function camelizer(data) {
-  if (Array.isArray(data)) {
-    return camelizeCollection(data);
-  } else {
-    return camelizeKeys(data);
-  }
+  return isArray(data) ? camelizeCollection(data) : camelizeKeys(data);
 }
 
-function defaultNormalizer(entityName) {
-  return (obj, args, data) => {
-    if (Array.isArray(data)) {
-     return [new schema.Entity(entityName)];
-   } else {
-     return new schema.Entity(entityName);
-   }
-  }
+function defaultNormalize(entityName) {
+  return (data, { obj, args }) => isArray(data) ? [ new schema.Entity(entityName) ] : new schema.Entity(entityName)
 }

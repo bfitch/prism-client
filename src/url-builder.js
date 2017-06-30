@@ -1,9 +1,10 @@
+import getId from './utils/get-id';
+
 export default function UrlBuilderFactory(host = '', defaultUrl) {
   return class UrlBuilder {
-    constructor(_obj, args, urlFn, id, idValue) {
-      const obj       = (args && Object.keys(args).length) ? args : _obj;
-      this.id         = idValue || (obj[id] ? obj[id] : Object.values(obj).pop()[id]);
-      this.customUrl  = (urlFn && urlFn(obj)) || defaultUrl;
+    constructor(obj, args, opts = {}) {
+      this.id        = getId(obj, args, opts);
+      this.customUrl = (opts.url && opts.url(obj, args)) || defaultUrl;
     }
 
     get href() {
@@ -32,7 +33,7 @@ export default function UrlBuilderFactory(host = '', defaultUrl) {
         };
       } else {
         return {
-          url: (this.customUrl.url || defaultUrl),
+          url: this.customUrl.url,
           params: this.customUrl.params,
           headers: this.customUrl.headers
         };

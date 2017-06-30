@@ -11,11 +11,11 @@ export function update({
   resetForceFetch,
   update
 }, _ref) {
-  let { id = 'id', method = 'put' } = _ref,
-      opts = _objectWithoutProperties(_ref, ['id', 'method']);
+  let { method = 'put' } = _ref,
+      opts = _objectWithoutProperties(_ref, ['method']);
 
   return (resolvers, args, context, _) => {
-    const url = new UrlBuilder(resolvers, args, opts.url, id);
+    const url = new UrlBuilder(resolvers, args, opts);
     const { options: { forceFetch = false, clearCache = false } = {} } = args,
           variables = _objectWithoutProperties(args, ['options']);
 
@@ -30,7 +30,7 @@ export function update({
     });
 
     return request.then(res => {
-      const { entities, result } = normalize(res, resolvers, variables);
+      const { entities, result } = normalize(res, { obj: resolvers, args: variables });
       store.set(entities);
 
       loader.clearUrls();

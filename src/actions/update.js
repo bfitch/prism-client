@@ -8,10 +8,10 @@ export function update({
   normalize,
   resetForceFetch,
   update
-}, { id = 'id', method = 'put', ...opts }) {
+}, { method = 'put', ...opts }) {
 
   return (resolvers, args, context, _) => {
-    const url = new UrlBuilder(resolvers, args, opts.url, id);
+    const url = new UrlBuilder(resolvers, args, opts);
     const { options: { forceFetch = false, clearCache = false } = {}, ...variables } = args;
 
     if (clearCache) store.clearCache();
@@ -25,7 +25,7 @@ export function update({
     });
 
     return request.then(res => {
-      const { entities, result } = normalize(res, resolvers, variables);
+      const { entities, result } = normalize(res, { obj: resolvers, args: variables });
       store.set(entities);
 
       loader.clearUrls();

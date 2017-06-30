@@ -11,7 +11,7 @@ export function create({
 }, opts) {
 
   return (resolvers, args, context, _) => {
-    const url = new UrlBuilder(resolvers, args, opts.url);
+    const url = new UrlBuilder(resolvers, args, opts);
     const { options: { forceFetch = false, clearCache = false } = {}, ...variables } = args;
 
     if (clearCache) store.clearCache();
@@ -25,7 +25,7 @@ export function create({
     });
 
     return request.then(res => {
-      const { entities, result } = normalize(res, resolvers, variables);
+      const { entities, result } = normalize(res, { obj: resolvers, args: variables });
       store.set(entities);
 
       loader.clearUrls();

@@ -15,7 +15,8 @@ export function indexAction({
 }, opts) {
 
   return (obj, args, context, _) => {
-    const url = new UrlBuilder(obj, args, opts.url);
+    const url = new UrlBuilder(obj, args);
+
     const { options: { forceFetch = false, clearCache = false } = {} } = args,
           variables = _objectWithoutProperties(args, ["options"]);
     const forceFetching = forceFetch || forceFetchResource;
@@ -36,7 +37,7 @@ export function indexAction({
     if (clearCache) store.clearCache();
 
     return loader.load(url).then(res => {
-      const { entities } = normalize(res, obj, variables);
+      const { entities } = normalize(res, { obj, args: variables });
       store.set(entities);
 
       resetForceFetch(forceFetch);

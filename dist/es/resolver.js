@@ -10,6 +10,10 @@ export default function Resolver({ store, loader, http, host }) {
   return class Resolver {
     constructor(options = {}) {
       this.entityName = options.entityName;
+      this.normalize = options.normalize;
+      this.parse = options.parse;
+      this.serialize = options.serialize;
+      this.store = store;
       this.forceFetch = false;
       this.actionContext = {
         UrlBuilder: UrlBuilderFactory(options.host || host, options.url),
@@ -22,59 +26,59 @@ export default function Resolver({ store, loader, http, host }) {
     }
 
     index(opts = {}) {
-      return indexAction(_extends({}, this.actionContext, {
-        normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
-        forceFetchResource: this.forceFetch,
-        includeResponseHeaders: opts.includeResponseHeaders || false,
-        storeQuery: opts.storeQuery || (args => obj => true)
-      }), opts);
+      const storeQuery = opts.storeQuery || (args => obj => true);
+      return indexAction(_extends({}, this.resourceContext(opts), { storeQuery }), opts);
     }
 
     show(_ref = {}) {
       let { ids } = _ref,
           opts = _objectWithoutProperties(_ref, ['ids']);
 
-      const resourceContext = _extends({}, this.actionContext, {
-        normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
-        forceFetchResource: this.forceFetch,
-        includeResponseHeaders: opts.includeResponseHeaders || false
-      });
-
       if (ids) {
         return (obj, args, context, _) => {
-          return Promise.all(obj[ids].map(nestedId => {
-            return show(resourceContext, obj, args, _extends({}, opts, { nestedId }));
+          return Promise.all(obj[ids].map(idValue => {
+            return show(this.resourceContext(opts), obj, args, _extends({}, opts, { idValue }));
           }));
         };
       } else {
-        return (obj, args, context, _) => {
-          return show(resourceContext, obj, args, opts);
-        };
+        return (obj, args, context, _) => show(this.resourceContext(opts), obj, args, opts);
       }
     }
 
     create(opts = {}) {
-      return create(_extends({}, this.actionContext, {
-        normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
-        serialize: opts.serialize || this.serialize || (args => args),
-        update: opts.update || ((...args) => args)
-      }), opts);
+      return create(this.mutationContext(opts), opts);
     }
 
     update(opts = {}) {
-      return update(_extends({}, this.actionContext, {
-        normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
-        serialize: opts.serialize || this.serialize || (args => args),
-        update: opts.update || ((...args) => args)
-      }), opts);
+      return update(this.mutationContext(opts), opts);
     }
 
     delete(opts = {}) {
-      return deleteAction(_extends({}, this.actionContext, {
-        normalize: Normalizer(opts.parse, opts.normalize, this.entityName),
+      return deleteAction(this.mutationContext(opts), opts);
+    }
+
+    resourceContext(opts) {
+      return _extends({}, this.actionContext, {
+        normalize: Normalizer(this.entityName, this.normalizeOpts(opts)),
+        forceFetchResource: this.forceFetch,
+        includeResponseHeaders: opts.includeResponseHeaders || false
+      });
+    }
+
+    mutationContext(opts) {
+      return _extends({}, this.actionContext, {
+        normalize: Normalizer(this.entityName, this.normalizeOpts(opts)),
         serialize: opts.serialize || this.serialize || (args => args),
         update: opts.update || ((...args) => args)
-      }), opts);
+      });
+    }
+
+    normalizeOpts(opts) {
+      return {
+        normalize: opts.normalize || this.normalize,
+        parse: opts.parse || this.parse,
+        store: this.store
+      };
     }
   };
 }
